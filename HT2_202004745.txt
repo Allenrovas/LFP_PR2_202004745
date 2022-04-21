@@ -1,0 +1,35 @@
+S ::= INICIO
+
+INICIO ::= INSTRUCCION INICIO'
+INICIO' ::= INSTRUCCION INICIO'
+INICIO' ::= epsilon
+
+INSTRUCCION ::= RESERVADA VALOR RESERVADA VALOR RESERVADA menorQue FECHA mayorQue
+
+INSTRUCCION ::= RESERVADA NUMERO RESERVADA menorQue FECHA mayorQue (RESERVADA VALOR)*
+
+INSTRUCCION ::= RESERVADA RESERVADA VALOR RESERVADA menorQue FECHA mayorQue
+
+INSTRUCCION ::= RESERVADA RESERVADA menorQue FECHA mayorQue (RESERVADA VALOR)*
+
+INSTRUCCION ::= RESERVADA VALOR RESERVADA menorQue FECHA mayorQue (RESERVADA VALOR)* (RESERVADA NUMERO)* (RESERVADA NUMERO)*
+
+FECHA ::= NUMERO guion NUMERO
+
+VALOR ::= cadena
+
+NUMERO ::= entero
+
+RESERVADA ::= pr_resultado
+            | pr_vs
+            | pr_temporada
+            | pr_jornada
+            | pr_-f
+            | pr_goles
+            | pr_tabla
+            | pr_partidos
+            | pr_ji
+            | pr_jf
+            | pr_Local
+            | pr_Visitante
+            | pr_Total
