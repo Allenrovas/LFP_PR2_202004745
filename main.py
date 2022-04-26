@@ -3,26 +3,33 @@ from tkinter.filedialog import askopenfilename
 from tkinter import ttk
 from tkinter import messagebox
 import csv
+from AnalizadorLexico import AnalizadorLexico
 from Jornada import Jornada
 
 ListaJornadas = []
-ListaGoles = []
 
+# Función para abrir el archivo y leerlo, cargar los datos en la lista
 with open('LaLigaBot-LFP.csv',encoding="utf-8") as File:
     reader = csv.reader(File, delimiter=',', quotechar=',',quoting=csv.QUOTE_MINIMAL)
     Contador = 0
     for row in reader:
         if Contador == 0:
             pass
-            print("hola")
         else:
             NuevaJornada = Jornada(row[1],row[2],row[3],row[4],row[5],row[6])
             ListaJornadas.append(NuevaJornada)
         Contador += 1
 
 
+
+
 def Enviar():
-    print("Botón evniar")
+    lexico = AnalizadorLexico()
+    CadenaAnalizar = EntradaComando.get()
+    lexico.AnalizadorLexico(CadenaAnalizar)
+    lexico.imprimirErrores()
+    lexico.imprimirTokens()
+    
 
 def ReporteErrores():
     print("Botón reporte de errores")
