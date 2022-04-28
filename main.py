@@ -6,7 +6,6 @@ from AnalizadorLexico import AnalizadorLexico
 from os import system, startfile
 from AnalizadorSintactico import AnalizadorSintactico
 
-
 lexico = AnalizadorLexico()
 global listaGlobalTokens
 global listaGlobalErroresLexicos
@@ -15,7 +14,6 @@ global MensajeInicial
 listaGlobalTokens = []
 listaGlobalErroresLexicos = []
 listaGlobalErroresSintacticos = []
-
 
 def Enviar():
     global listaGlobalTokens
@@ -60,8 +58,13 @@ def Enviar():
     sintactico.LimpiarErrores()
     lexico.LimpiarErrores()
     lexico.LimpiarTokens()
-    
 
+    if Cadena == "Adios":
+        salir = messagebox.askquestion("Salir", "¿Desea salir de la interfaz?")
+        if salir == 'yes':
+            VentanaPrincipal.quit()
+            VentanaPrincipal.destroy()
+    
 def ReporteErrores():
     global listaGlobalErroresLexicos
     global listaGlobalErroresSintacticos
@@ -69,7 +72,6 @@ def ReporteErrores():
     CuerpoHtml= """<!DOCTYPE html>
     <html lang=es>
     <head>
-    <meta charset = "utf-8 ">
     <title>REPORTES</title>
     <style type = "text/css">
     body{
@@ -151,7 +153,6 @@ def ReporteTokens():
     CuerpoHtml= """<!DOCTYPE html>
     <html lang=es>
     <head>
-    <meta charset = "utf-8 ">
     <title>REPORTES</title>
     <style type = "text/css">
     body{
@@ -223,9 +224,6 @@ def ManualTecnico():
     print("Botón manual técnico")
     startfile('Documentacion\ManualTecnico.pdf')
 
-
-  
-
 VentanaPrincipal = Tk()
 VentanaPrincipal.geometry("1200x825")
 VentanaPrincipal.title("La Liga Bot")
@@ -238,14 +236,12 @@ botonReporteTokens = Button(VentanaPrincipal, text="Reporte de Tokens", width=15
 botonLimpiarTokens = Button(VentanaPrincipal, text="Limpiar Tokens", width=15, height=1, font=("Arial", 12, "italic"), command= LimpiarTokens)
 botonManualUsuario = Button(VentanaPrincipal, text="Manual de Usuario", width=15, height=1, font=("Arial", 12, "italic"), command= ManualUsuario)
 botonManualTecnico = Button(VentanaPrincipal, text="Manual de Técnico", width=15, height=1, font=("Arial", 12, "italic"), command= ManualTecnico)
-
 EntradaComando = Entry(VentanaPrincipal, width=50, font=("Arial", 12, "italic"))
-
-
-
 Titulo = Label(VentanaPrincipal, text = "La Liga Bot", font=("Arial", 16, "italic"),  bg="SkyBlue1")
 Entrada = Text(VentanaPrincipal, font=("Arial", 12, "italic"))
+
 MensajeInicial = "LaLigaBot: Bienvenido a la interfaz de la Liga Bot.\nLaLigaBot: Para comenzar, ingrese un comando en el cuadro de texto.  "
+
 Entrada.insert(1.0, MensajeInicial)
 Entrada.config(state=DISABLED)
 BarraVertical = Scrollbar(Entrada)

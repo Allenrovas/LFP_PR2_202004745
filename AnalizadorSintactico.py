@@ -336,7 +336,128 @@ class AnalizadorSintactico:
                     elif token.tipo == "cadenaMayorYMenorQue":
                         Temporada = token.lexema
                         # Si todo salió bien, llamar a la funcionalidad
-                        self.cadenaRetorno = PartidosBot(Equipo,Temporada)
+                        token = self.sacarToken()
+                        if token is None:
+                            #Funcionalidad
+                            self.cadenaRetorno = PartidosBot(Equipo,Temporada,"partidos.html",1,0)
+                            return
+                        elif token.tipo == "banderaF":
+                            token = self.sacarToken()
+                            if token is None:
+                                self.agregarError("NombreArchivo","EOF")
+                                self.cadenaRetorno = "Se encontró un error sintáctico"
+                                return
+                            elif token.tipo == "NombreArchivo":
+                                nombreArchivo = token.lexema+".html"
+                                token = self.sacarToken()
+                                if token is None:
+                                    #funcionalidad
+                                    self.cadenaRetorno = PartidosBot(Equipo,Temporada,nombreArchivo,1,0)
+                                    return
+                                elif token.tipo == "banderaJi":
+                                    token = self.sacarToken()
+                                    if token is None:
+                                        self.agregarError("Numero","EOF")
+                                        self.cadenaRetorno = "Se encontró un error sintáctico"
+                                        return
+                                    elif token.tipo == "Numero":
+                                        NumeroJi = token.lexema
+                                        token = self.sacarToken()
+                                        if token is None:
+                                            #funcionalidad
+                                            self.cadenaRetorno = PartidosBot(Equipo,Temporada,nombreArchivo,NumeroJi,0)
+                                            return
+                                        elif token.tipo == "banderaJf":
+                                            token = self.sacarToken()
+                                            if token is None:
+                                                self.agregarError("Numero","EOF")
+                                                self.cadenaRetorno = "Se encontró un error sintáctico"
+                                                return
+                                            elif token.tipo == "Numero":
+                                                NumeroJf = token.lexema
+                                                #funcionalidad
+                                                self.cadenaRetorno = PartidosBot(Equipo,Temporada,nombreArchivo,NumeroJi,NumeroJf)
+                                                return
+                                            else:
+                                                self.agregarError("Numero",token.tipo)
+                                                self.cadenaRetorno = "Se encontró un error sintáctico"
+                                        else:
+                                            self.agregarError("banderaJf",token.tipo)
+                                            self.cadenaRetorno = "Se encontró un error sintáctico"
+                                    else:
+                                        self.agregarError("Numero",token.tipo)
+                                        self.cadenaRetorno = "Se encontró un error sintáctico"
+                                elif token.tipo == "banderaJf":
+                                    token = self.sacarToken()
+                                    if token is None:
+                                        self.agregarError("Numero","EOF")
+                                        self.cadenaRetorno = "Se encontró un error sintáctico"
+                                        return
+                                    elif token.tipo == "Numero":
+                                        NumeroJf = token.lexema
+                                        #funcionalidad
+                                        self.cadenaRetorno = PartidosBot(Equipo,Temporada,nombreArchivo,1,NumeroJf)
+                                        return
+                                    else:
+                                        self.agregarError("Numero",token.tipo)
+                                        self.cadenaRetorno = "Se encontró un error sintáctico"
+                                else:
+                                    self.agregarError("banderaJi | bandera Jf",token.tipo)
+                                    self.cadenaRetorno = "Se encontró un error sintáctico"
+                            else:
+                                self.agregarError("NombreArchivo",token.tipo)
+                                self.cadenaRetorno = "Se encontró un error sintáctico"
+                        elif token.tipo == "banderaJi":
+                            token = self.sacarToken()
+                            if token is None:
+                                self.agregarError("Numero","EOF")
+                                self.cadenaRetorno = "Se encontró un error sintáctico"
+                                return
+                            elif token.tipo == "Numero":
+                                NumeroJi = token.lexema
+                                token = self.sacarToken()
+                                if token is None:
+                                    #funcionalidad
+                                    self.cadenaRetorno = PartidosBot(Equipo,Temporada,"partidos.html",NumeroJi,0)
+                                    return
+                                elif token.tipo == "banderaJf":
+                                    token = self.sacarToken()
+                                    if token is None:
+                                        self.agregarError("Numero","EOF")
+                                        self.cadenaRetorno = "Se encontró un error sintáctico"
+                                        return
+                                    elif token.tipo == "Numero":
+                                        NumeroJf = token.lexema
+                                        #funcionalidad
+                                        self.cadenaRetorno = PartidosBot(Equipo,Temporada,"partidos.html",NumeroJi,NumeroJf)
+                                        return
+                                    else:
+                                        self.agregarError("Numero",token.tipo)
+                                        self.cadenaRetorno = "Se encontró un error sintáctico"
+                                else:
+                                    self.agregarError("banderaJf",token.tipo)
+                                    self.cadenaRetorno = "Se encontró un error sintáctico"
+                            else:
+                                self.agregarError("Numero",token.tipo)
+                                self.cadenaRetorno = "Se encontró un error sintáctico"
+
+                        elif token.tipo == "banderaJf":
+                            token = self.sacarToken()
+                            if token is None:
+                                self.agregarError("Numero","EOF")
+                                self.cadenaRetorno = "Se encontró un error sintáctico"
+                                return
+                            elif token.tipo == "Numero":
+                                NumeroJf = token.lexema
+                                #funcionalidad
+                                self.cadenaRetorno = PartidosBot(Equipo,Temporada,"partidos.html",1,NumeroJf)
+                                return
+                            else:
+                                self.agregarError("Numero",token.tipo)
+                                self.cadenaRetorno = "Se encontró un error sintáctico"
+                        else:
+                            self.agregarError("banderaF | banderaJi | bandera JF",token.tipo)
+                            self.cadenaRetorno = "Se encontró un error sintáctico"
                     else:
                         self.agregarError("cadenaMayorYMenorQue",token.tipo)
                         self.cadenaRetorno = "Se encontró un error sintáctico"
@@ -349,7 +470,84 @@ class AnalizadorSintactico:
         else:
             self.agregarError("PARTIDOS",token.tipo)
             self.cadenaRetorno = "Se encontró un error sintáctico"
-            
+
+    def TOP(self):
+        # Comando para el top de equipos de una temporada
+        # Producción
+        #TOP ::= top CONDICION_TOP temporada cadenamenorQuemayorQue (banderaN numero)*
+        # Sacar token --- se espera TOP
+        token = self.sacarToken()
+        if token.tipo == "TOP":
+            # Sacar token --- se espera CONDICION_TOP
+            token = self.sacarToken()
+            if token is None:
+                self.agregarError("CONDICION_TOP","EOF")
+                self.cadenaRetorno = "Se encontró un error sintáctico"
+                return
+            elif token.tipo == "CONDICION_TOP":
+                Condicion = token.lexema
+                # Sacar token --- se espera temporada
+                token = self.sacarToken()
+                if token is None:
+                    self.agregarError("TEMPORADA","EOF")
+                    self.cadenaRetorno = "Se encontró un error sintáctico"
+                    return
+                elif token.tipo == "TEMPORADA":
+                    # Sacar token --- se espera cadenamenorQuemayorQue
+                    token = self.sacarToken()
+                    if token is None:
+                        self.agregarError("cadenaMayorYMenorQue","EOF")
+                        self.cadenaRetorno = "Se encontró un error sintáctico"
+                        return
+                    elif token.tipo == "cadenaMayorYMenorQue":
+                        Temporada = token.lexema
+                        # Sacar token --- se espera banderaN 
+                        token = self.sacarToken()
+                        if token is None:
+                            self.cadenaRetorno = TopBot(Condicion,Temporada,5)
+                            return
+                        elif token.tipo == "banderaN":
+                            # sacar otro token --- se espera numero
+                            token = self.sacarToken()
+                            if token is None:
+                                self.agregarError("Numero","EOF")
+                                self.cadenaRetorno = "Se encontró un error sintáctico"
+                                return
+                            elif token.tipo == "Numero":
+                                Numero = token.lexema
+                                self.cadenaRetorno = TopBot(Condicion,Temporada,Numero)
+                                return
+                            else:
+                                self.agregarError("Numero",token.tipo)
+                                self.cadenaRetorno = "Se encontró un error sintáctico"
+                        else:
+                            self.agregarError("banderaN",token.tipo)
+                            self.cadenaRetorno = "Se encontró un error sintáctico"
+                    else:
+                        self.agregarError("cadenaMayorYMenorQue",token.tipo)
+                        self.cadenaRetorno = "Se encontró un error sintáctico"
+                else:
+                    self.agregarError("TEMPORADA",token.tipo)
+                    self.cadenaRetorno = "Se encontró un error sintáctico"
+            else:
+                self.agregarError("CONDICION_TOP",token.tipo)
+                self.cadenaRetorno = "Se encontró un error sintáctico"
+        else:
+            self.agregarError("TOP",token.tipo)
+            self.cadenaRetorno = "Se encontró un error sintáctico"
+
+    def ADIOS(self):
+        # Comando para salir del programa
+        # Producción
+        #ADIOS ::= adios
+        # Sacar token --- se espera ADIOS
+        token = self.sacarToken()
+        if token.tipo == "ADIOS":
+            self.cadenaRetorno = "Adios"
+            return
+        else:
+            self.agregarError("ADIOS",token.tipo)
+            self.cadenaRetorno = "Se encontró un error sintáctico"
 
     def imprimirErrores(self):
         '''Imprime una tabla con los errores'''
@@ -358,3 +556,4 @@ class AnalizadorSintactico:
         for error_ in self.errores:
             x.add_row([error_])
         print(x)
+        

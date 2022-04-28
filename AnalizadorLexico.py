@@ -5,7 +5,6 @@ from Error import Error
 
 class AnalizadorLexico:
     
-
     def __init__(self) -> None:
         self.listaTokens  = []
         self.listaErrores = []
@@ -188,9 +187,9 @@ class AnalizadorLexico:
                     elif buffer == 'TOP':
                         self.listaTokens.append(Token(buffer, 'TOP', linea, columna))
                     elif buffer == 'SUPERIOR':
-                        self.listaTokens.append(Token(buffer, 'SUPERIOR', linea, columna))
+                        self.listaTokens.append(Token(buffer, 'CONDICION_TOP', linea, columna))
                     elif buffer == 'INFERIOR':
-                        self.listaTokens.append(Token(buffer, 'INFERIOR', linea, columna))
+                        self.listaTokens.append(Token(buffer, 'CONDICION_TOP', linea, columna))
                     elif buffer == 'ADIOS':
                         self.listaTokens.append(Token(buffer, 'ADIOS', linea, columna))
                     
@@ -199,9 +198,6 @@ class AnalizadorLexico:
                     buffer = ''
             i += 1
         
-            
-        
-
     def imprimirTokens(self):
         '''Imprime una tabla con los tokens'''
         x = PrettyTable()
@@ -217,6 +213,4 @@ class AnalizadorLexico:
         for error_ in self.listaErrores:
             x.add_row([error_.descripcion, error_.linea, error_.columna])
         print(x)
-    
-       
-        
+            

@@ -3,6 +3,7 @@ import csv
 from Jornada import Jornada
 from os import system, startfile
 from Partidos import Partidos
+import codecs
 
 
 ListaJornadas = []
@@ -23,7 +24,6 @@ def GenerarHtmlJornada(ListaJornadaAuxiliar, nombreArchivo):
     CuerpoHtml= """<!DOCTYPE html>
     <html lang=es>
     <head>
-    <meta charset = "utf-8 ">
     <title>REPORTES</title>
     <style type = "text/css">
     body{
@@ -82,7 +82,7 @@ def GenerarHtmlJornada(ListaJornadaAuxiliar, nombreArchivo):
     archivo.write(CuerpoHtml)
     startfile(nombreArchivo)
     print("Se ha generado el html con los reportes.")
-
+    
 def GenerarHtmlTabla(ListaEquipos, nombreArchivo,Temporada):
     
     tamaño=len(ListaEquipos)
@@ -100,7 +100,6 @@ def GenerarHtmlTabla(ListaEquipos, nombreArchivo,Temporada):
     CuerpoHtml= """<!DOCTYPE html>
     <html lang=es>
     <head>
-    <meta charset = "utf-8 ">
     <title>REPORTES</title>
     <style type = "text/css">
     body{
@@ -145,6 +144,71 @@ def GenerarHtmlTabla(ListaEquipos, nombreArchivo,Temporada):
         CuerpoHtml+= """<tr class = "table-primary">"""
         CuerpoHtml+= """<th>"""+str(equipo.equipo)+"""</th>"""
         CuerpoHtml+= """<th>"""+str(equipo.puntos)+"""</th>"""
+        CuerpoHtml+= """</tr>"""
+    CuerpoHtml+="""</table>
+    </div>
+    </body>
+    </html>"""
+    ruta = nombreArchivo
+    archivo = open(ruta,'w')
+    archivo.write(CuerpoHtml)
+    startfile(nombreArchivo)
+    print("Se ha generado el html con los reportes.")
+
+def GenerarHtmlPartidos(ListaPartidos, nombreArchivo, Temporada, Equipo):
+    CuerpoHtml= """<!DOCTYPE html>
+    <html lang=es>
+    <head>
+    <title>REPORTES</title>
+    <style type = "text/css">
+    body{
+    margin: 0;
+    font-family: Trebuchet MS, sans-serif;
+    background-color: #fefbe9;
+    background:linear-gradient(45deg,aqua,#02C7FF, #02A5FF , #0251FF , #022BFF, #6302FF,  #9402FF, #CA02FF ,#FF02F7);
+    }
+    .topnav {
+    overflow: hidden;
+    background-color: #DC143C;
+    text-align: center;
+    }
+    table {
+    border-collapse: collapse;
+    width: 50%;
+    }
+    td, th {
+    font-family: bahnschrift;
+    border: 1px solid #000;
+    text-align: center;
+    padding: 8px;
+    }
+    h2{
+    color: #000000;
+    }</style>
+    </head>
+    <body>
+    <div align="center" class="topnav"> 
+    <h1 style = "color: black; ">REPORTE PARTIDOS</h1></div><br></br>
+    <table align="center">
+    <tr>
+    <th colspan="5" style="background-color: black; color: white;">Temporada """+str(Temporada)+" del equipo "+str(Equipo)
+    CuerpoHtml+="""</th>
+    </tr>
+    <tr>
+    <th colspan="1"style="background-color: black; color: white;">Jornada</th>
+    <th colspan="1"style="background-color: black; color: white;">Equipo Local</th>
+    <th colspan="1"style="background-color: black; color: white;">Equipo Visitante</th>
+    <th colspan="1"style="background-color: black; color: white;">Goles Local</th>
+    <th colspan="1"style="background-color: black; color: white;">Goles Visita</th>
+    </tr>
+    </tr>"""
+    for equipo in ListaPartidos:
+        CuerpoHtml+= """<tr class = "table-primary">"""
+        CuerpoHtml+= """<th>"""+str(equipo.jornada)+"""</th>"""
+        CuerpoHtml+= """<th>"""+str(equipo.equipo1)+"""</th>"""
+        CuerpoHtml+= """<th>"""+str(equipo.equipo2)+"""</th>"""
+        CuerpoHtml+= """<th>"""+str(equipo.goles1)+"""</th>"""
+        CuerpoHtml+= """<th>"""+str(equipo.goles2)+"""</th>"""
         CuerpoHtml+= """</tr>"""
     CuerpoHtml+="""</table>
     </div>
@@ -389,3 +453,159 @@ def TablaBot(Temporada, NombreArchivo):
         Cadena = "No se encontró alguna temporada"
         return Cadena
 
+def PartidosBot(Equipo, Temporada, nombreArchivo, JornadaInicial, JornadaFinal):
+    ResultadoTemporadaFuncion = ""
+    EquipoFuncion = ""
+    TemporadaExiste = False
+    EquipoEncontrado = False
+    ListaJornadasEquipo = []
+    ListaAuxiliar = []
+    
+
+    for Caracter in Temporada:
+        if Caracter == '<' or Caracter == '>':
+            pass
+        else: 
+            ResultadoTemporadaFuncion += Caracter
+    
+    for Caracter in Equipo:
+        if Caracter == '"':
+            pass
+        else: 
+            EquipoFuncion += Caracter
+    
+    JornadaInicial = int(JornadaInicial)
+    
+    for Jornada in ListaJornadas:
+        if Jornada.temporada == ResultadoTemporadaFuncion:
+            TemporadaExiste = True
+            if Jornada.equipo1 == EquipoFuncion or Jornada.equipo2 == EquipoFuncion:
+                EquipoEncontrado = True
+                ListaJornadasEquipo.append(Jornada)
+        else:
+            pass
+ 
+    
+    if JornadaFinal == 0:
+        JornadaFinalAux = len(ListaJornadasEquipo)
+    else:
+        JornadaFinalAux = int(JornadaFinal)
+    
+    print(JornadaFinalAux, JornadaInicial)
+    
+    for Jornada in ListaJornadasEquipo:
+        if int(Jornada.jornada) >= JornadaInicial and int(Jornada.jornada) <= JornadaFinalAux:
+            ListaAuxiliar.append(Jornada)
+        else:
+            pass
+    
+    if EquipoEncontrado == True:
+        GenerarHtmlPartidos(ListaAuxiliar, nombreArchivo, ResultadoTemporadaFuncion, EquipoFuncion)
+        Cadena = "Generando partidos de la temporada "+str(ResultadoTemporadaFuncion)+" del equipo "+str(EquipoFuncion)
+        return Cadena
+    
+    if TemporadaExiste == False:
+        Cadena = "No se encontró alguna temporada"
+        return Cadena
+    
+    if TemporadaExiste == True and EquipoEncontrado == False:
+        Cadena = "No se encontró algún equipo"
+        return Cadena
+
+def TopBot(Condicion, Temporada, Cantidad):
+    
+    ResultadoTemporadaFuncion = ""
+    TemporadaExiste = False
+    ListaEquipos = []
+    ListaAuxiliar = []
+
+    for Caracter in Temporada:
+        if Caracter == '<' or Caracter == '>':
+            pass
+        else: 
+            ResultadoTemporadaFuncion += Caracter
+    
+    for Jornada in ListaJornadas:
+        if Jornada.temporada == ResultadoTemporadaFuncion:
+            TemporadaExiste = True
+            if Jornada.jornada == "1":
+                ListaEquipos.append(Partidos(Jornada.equipo1,0))
+                ListaEquipos.append(Partidos(Jornada.equipo2,0))
+
+    for Jornada in ListaJornadas:
+        if Jornada.temporada == ResultadoTemporadaFuncion:
+            if int(Jornada.goles1) > int(Jornada.goles2):
+                for equipo in ListaEquipos:
+                    if equipo.equipo == Jornada.equipo1:
+                        equipo.puntos += 3
+            elif int(Jornada.goles1) < int(Jornada.goles2):
+                for equipo in ListaEquipos:
+                    if equipo.equipo == Jornada.equipo2:
+                        equipo.puntos += 3
+            else:
+                for equipo in ListaEquipos:
+                    if equipo.equipo == Jornada.equipo1:
+                        equipo.puntos += 1
+                    if equipo.equipo == Jornada.equipo2:
+                        equipo.puntos += 1
+        else:
+            pass
+    
+    if Condicion == "SUPERIOR":
+        tamaño=len(ListaEquipos)
+        i=0
+        while i < tamaño - 1:
+            j=0
+            while j < tamaño - 1:
+                if ListaEquipos[j].puntos < ListaEquipos[j+1].puntos:
+                    temp = ListaEquipos[j+1]
+                    ListaEquipos[j+1] = ListaEquipos[j]
+                    ListaEquipos[j] = temp
+                j+=1
+            i+=1
+        Cadena = "Generando Top superior de la temporada "+str(ResultadoTemporadaFuncion)+":\n"
+        
+    elif Condicion == "INFERIOR":
+
+        tamaño=len(ListaEquipos)
+        i=0
+        while i < tamaño - 1:
+            j=0
+            while j < tamaño - 1:
+                if ListaEquipos[j].puntos > ListaEquipos[j+1].puntos:
+                    temp = ListaEquipos[j+1]
+                    ListaEquipos[j+1] = ListaEquipos[j]
+                    ListaEquipos[j] = temp
+                j+=1
+            i+=1
+        Cadena = "Generando Top inferior de la temporada "+str(ResultadoTemporadaFuncion)+":\n"
+        
+    '''Contador = 0
+    for ListaEquipos in range(0, int(Cantidad)):
+        Cadena += str(Contador)+ListaEquipos.equipo+"\n"
+        Contador += 1'''
+
+    Contador = 1
+    Inferior = len(ListaEquipos) 
+    if int(Cantidad) <=5 and int(Cantidad) > 0:
+        for equipo in ListaEquipos:
+            if Contador <= int(Cantidad):
+                if Condicion == "SUPERIOR":
+                    Cadena += str(Contador)+". "+equipo.equipo+"\n"
+                elif Condicion == "INFERIOR":
+                    Cadena += str(Inferior)+". "+equipo.equipo+"\n"
+                    Inferior -= 1
+                Contador += 1
+            else:
+                break
+    
+    else:
+        Cadena = "No se puede generar el Top porque la cantidad de equipos es mayor a 5 o menor a Cero"
+        return Cadena 
+
+    if TemporadaExiste == True:    
+        return Cadena
+    else:
+        Cadena = "No se encontró alguna temporada"
+        return Cadena
+    
