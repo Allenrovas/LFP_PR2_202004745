@@ -1,35 +1,32 @@
 S ::= INICIO
 
 INICIO ::= INSTRUCCION INICIO'
-INICIO' ::= INSTRUCCION INICIO'
-INICIO' ::= epsilon
+INICIO ::= INSTRUCCION INICIO'
+INICIO' ::= epsilon 
 
-INSTRUCCION ::= RESERVADA VALOR RESERVADA VALOR RESERVADA menorQue FECHA mayorQue
+INSTRUCCION ::= RESULTADO
+                | JORNADA
+                | GOLES
+                | TABLA
+                | PARTIDOS
+                | TOP
 
-INSTRUCCION ::= RESERVADA NUMERO RESERVADA menorQue FECHA mayorQue (RESERVADA VALOR)*
+RESULTADO ::= resultado cadenaComillas vs cadenaComillas temporada cadenamenorQuemayorQue
 
-INSTRUCCION ::= RESERVADA RESERVADA VALOR RESERVADA menorQue FECHA mayorQue
+JORNADA ::= jornada numero temporada cadenamenorQuemayorQue (banderaF nombreArchivo)*
 
-INSTRUCCION ::= RESERVADA RESERVADA menorQue FECHA mayorQue (RESERVADA VALOR)*
+GOLES  ::= goles CONDICION_GOLES cadenaComillas temporada cadenamenorQuemayorQue
 
-INSTRUCCION ::= RESERVADA VALOR RESERVADA menorQue FECHA mayorQue (RESERVADA VALOR)* (RESERVADA NUMERO)* (RESERVADA NUMERO)*
+TABLA ::= tabla temporada cadenamenorQuemayorQue (banderaF nombreArchivo)*
 
-FECHA ::= NUMERO guion NUMERO
+PARTIDOS ::= partidos cadena temporada cadenamenorQuemayorQue (banderaF nombreArchivo)* (banderaJi numero)* (banderaJf numero)*
 
-VALOR ::= cadena
+TOP ::= top CONDICION_TOP temporada cadenamenorQuemayorQue (banderaN numero)*
 
-NUMERO ::= entero
-
-RESERVADA ::= pr_resultado
-            | pr_vs
-            | pr_temporada
-            | pr_jornada
-            | pr_-f
-            | pr_goles
-            | pr_tabla
-            | pr_partidos
-            | pr_ji
-            | pr_jf
-            | pr_Local
-            | pr_Visitante
-            | pr_Total
+CONDICION_GOLES ::= local
+            | visitante
+            | total
+        
+CONDICION_TOP::= superior
+                | inferior
+            

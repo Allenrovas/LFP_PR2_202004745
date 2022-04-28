@@ -4,6 +4,7 @@ from Token import Token
 from Error import Error
 
 class AnalizadorLexico:
+    
 
     def __init__(self) -> None:
         self.listaTokens  = []
@@ -13,11 +14,16 @@ class AnalizadorLexico:
         self.buffer = ''
         self.estado = 0
         self.i = 0
+
+    def LimpiarTokens (self):
+        self.listaTokens.clear()
+    
+    def LimpiarErrores (self):
+        self.listaErrores.clear()
     
     def AnalizadorLexico(self, Entrada):
         '''Analiza el archivo de entrada'''
-        self.listaTokens = []
-        self.listaErrores = []
+        
         
         linea = 1
         columna = 1
@@ -159,7 +165,7 @@ class AnalizadorLexico:
                 else:
                     if buffer == 'RESULTADO':
                         self.listaTokens.append(Token(buffer, 'RESULTADO', linea, columna))
-                    elif buffer == 'VS ':
+                    elif buffer == 'VS':
                         self.listaTokens.append(Token(buffer, 'VS', linea, columna))
                     elif buffer == 'TEMPORADA':
                         self.listaTokens.append(Token(buffer, 'TEMPORADA', linea, columna))
@@ -170,11 +176,11 @@ class AnalizadorLexico:
                     elif buffer == 'TEMPORADA':
                         self.listaTokens.append(Token(buffer, 'TEMPORADA', linea, columna))
                     elif buffer == 'LOCAL':
-                        self.listaTokens.append(Token(buffer, 'LOCAL', linea, columna))
+                        self.listaTokens.append(Token(buffer, 'CONDICION_GOLES', linea, columna))
                     elif buffer == 'VISITANTE':
-                        self.listaTokens.append(Token(buffer, 'VISITANTE', linea, columna))
+                        self.listaTokens.append(Token(buffer, 'CONDICION_GOLES', linea, columna))
                     elif buffer == 'TOTAL':
-                        self.listaTokens.append(Token(buffer, 'TOTAL', linea, columna))
+                        self.listaTokens.append(Token(buffer, 'CONDICION_GOLES', linea, columna))
                     elif buffer == 'TABLA':
                         self.listaTokens.append(Token(buffer, 'TABLA', linea, columna))
                     elif buffer == 'PARTIDOS':
@@ -212,126 +218,5 @@ class AnalizadorLexico:
             x.add_row([error_.descripcion, error_.linea, error_.columna])
         print(x)
     
-    def reporteTokens(self):
-        CuerpoHtml= """<!DOCTYPE html>
-        <html lang=es>
-        <head>
-        <meta charset = "utf-8 ">
-        <title>REPORTES</title>
-        <style type = "text/css">
-        body{
-            margin: 0;
-            font-family: Trebuchet MS, sans-serif;
-            background-color: #fefbe9;
-            background:linear-gradient(45deg,aqua,#02C7FF, #02A5FF , #0251FF , #022BFF, #6302FF,  #9402FF, #CA02FF ,#FF02F7);
-        }
-        .topnav {
-            overflow: hidden;
-            background-color: #DC143C;
-            text-align: center;
-        }
-        table {
-            border-collapse: collapse;
-            width: 50%;
-        }
-        td, th {
-            font-family: bahnschrift;
-            border: 1px solid #000;
-            text-align: center;
-            padding: 8px;
-        }
-        h2{
-            color: #000000;
-        }</style>
-        </head>
-        <body>
-        <div align="center" class="topnav"> 
-            <h1 style = "color: black; ">REPORTE TOKENS</h1></div><br></br>
-        <table align="center">
-        <tr>
-        <th colspan="5" style="background-color: black; color: white;">Tokens</th>
-        </tr>
-        <tr>
-            <th colspan="1"style="background-color: black; color: white;">Lexema</th>
-            <th colspan="1"style="background-color: black; color: white;">Linea</th>
-            <th colspan="1"style="background-color: black; color: white;">Columna</th>
-            <th colspan="1"style="background-color: black; color: white;">Tipo</th>
-        </tr>
-        </tr>"""
-        for token in self.listaTokens:
-            CuerpoHtml+= """<tr class = "table-primary">"""
-            CuerpoHtml+= """<th>"""+str(token.lexema)+"""</th>"""
-            CuerpoHtml+= """<th>"""+str(token.linea)+"""</th>"""
-            CuerpoHtml+= """<th>"""+str(token.columna)+"""</th>"""
-            CuerpoHtml+= """<th>"""+str(token.tipo)+"""</th>"""
-            CuerpoHtml+= """</tr>"""
-        CuerpoHtml+="""</table>
-        </div>
-        </body>
-        </html>"""
-        ruta = 'ReporteTokens.html'
-        archivo = open(ruta,'w')
-        archivo.write(CuerpoHtml)
-        startfile('ReporteTokens.html')
-        print("Se ha generado el html con los reportes.")
-    
-    def reporteErrores(self):
-        CuerpoHtml= """<!DOCTYPE html>
-        <html lang=es>
-        <head>
-        <meta charset = "utf-8 ">
-        <title>REPORTES</title>
-        <style type = "text/css">
-        body{
-            margin: 0;
-            font-family: Trebuchet MS, sans-serif;
-            background-color: #fefbe9;
-            background:linear-gradient(45deg,aqua,#02C7FF, #02A5FF , #0251FF , #022BFF, #6302FF,  #9402FF, #CA02FF ,#FF02F7);
-        }
-        .topnav {
-            overflow: hidden;
-            background-color: #DC143C;
-            text-align: center;
-        }
-        table {
-            border-collapse: collapse;
-            width: 50%;
-        }
-        td, th {
-            font-family: bahnschrift;
-            border: 1px solid #000;
-            text-align: center;
-            padding: 8px;
-        }
-        h2{
-            color: #000000;
-        }</style>
-        </head>
-        <body>
-        <div align="center" class="topnav"> 
-            <h1 style = "color: black; ">REPORTE ERRORES</h1></div><br></br>
-        <table align="center">
-        <tr>
-        <th colspan="5" style="background-color: black; color: white;">Errores</th>
-        </tr>
-        <tr>
-            <th colspan="1"style="background-color: black; color: white;">Descripcion</th>
-            <th colspan="1"style="background-color: black; color: white;">Linea</th>
-            <th colspan="1"style="background-color: black; color: white;">Columna</th>
-        </tr>
-        </tr>"""
-        for error in self.listaErrores:
-            CuerpoHtml+= """<tr class = "table-primary">"""
-            CuerpoHtml+= """<th>"""+str(error.descripcion)+"""</th>"""
-            CuerpoHtml+= """<th>"""+str(error.linea)+"""</th>"""
-            CuerpoHtml+= """<th>"""+str(error.columna)+"""</th>"""
-            CuerpoHtml+= """</tr>"""
-        CuerpoHtml+="""</table>
-        </div>
-        </body>
-        </html>"""
-        ruta = 'ReporteErrores.html'
-        archivo = open(ruta,'w')
-        archivo.write(CuerpoHtml)
-        startfile('ReporteErrores.html')
-        print("Se ha generado el html con los reportes.")
+       
+        
