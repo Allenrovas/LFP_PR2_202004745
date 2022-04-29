@@ -1,10 +1,7 @@
-from ast import Pass
 import csv
 from Jornada import Jornada
 from os import system, startfile
 from Partidos import Partidos
-import codecs
-
 
 ListaJornadas = []
 # Función para abrir el archivo y leerlo, cargar los datos en la lista

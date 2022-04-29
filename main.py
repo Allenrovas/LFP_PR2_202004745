@@ -21,7 +21,6 @@ def Enviar():
     global listaGlobalErroresLexicos
     global listaGlobalErroresSintacticos
 
-
     Entrada.config(state=NORMAL)
     Entrada.delete(1.0, END)
     
